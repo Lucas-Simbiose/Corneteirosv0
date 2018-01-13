@@ -29,6 +29,7 @@ class Profile(models.Model):
     state = models.CharField(max_length=20, null=True, blank=True)
     pro = models.BooleanField(default=False)
 
+
     def __str__(self):
         return self.user.username
 
@@ -37,3 +38,57 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
     instance.profile.save()
+
+class TeamData(models.Model):
+    Corinthians, Vasco, Atletico_pr, Atletico_mg, Palmeiras = 1, 2, 3, 4, 5
+    TEAM_CHOICES = (
+        (Corinthians, 'Corinthians'),
+        (Vasco, 'Vasco'),
+        (Atletico_pr, 'Atletico_pr'),
+        (Atletico_mg, 'Atletico_mg'),
+        (Palmeiras, 'Palmeiras'),
+    )
+    profile = models.OneToOneField(Profile, on_delete=models.CASCADE)
+    team_name = models.CharField(max_length=100, null=True, blank=True, verbose_name='Nome do Time')
+    real_team = models.PositiveIntegerField(choices=TEAM_CHOICES, null=True, blank=True, verbose_name='Time do Coração')
+
+    def __str__(self):
+        return self.profile.user.username
+
+@receiver(post_save, sender=Profile)
+def create_or_update_profile_teamdata(sender, instance, created, **kwargs):
+    if created:
+        TeamData.objects.create(profile=instance)
+    instance.teamdata.save()
+
+class TeamCrest(models.Model):
+    Grande, Pequeno, Medio = 1, 2, 3
+    CREST_CHOICES = (
+        (Grande, 'Grande'),
+        (Pequeno, 'Pequeno'),
+        (Medio, 'Médio'),
+    )
+    Verde, Vermelho, Azul, Amarelo, Preto = 1, 2, 3, 4, 5
+    CORES = (
+        (Verde, 'Verde'),
+        (Vermelho, 'Vermelho'),
+        (Azul, 'Azul'),
+        (Amarelo, 'Amarelo'),
+        (Preto, 'Preto'),
+    )
+    teamdata = models.OneToOneField(TeamData, on_delete=models.CASCADE)
+    crest_type = models.PositiveSmallIntegerField(choices=CREST_CHOICES, null=True, blank=True, verbose_name='Brasão')
+    stamp = models.PositiveSmallIntegerField(choices=CREST_CHOICES, null=True, blank=True, verbose_name='Estampa')
+    adornment = models.PositiveSmallIntegerField(choices=CREST_CHOICES, null=True, blank=True, verbose_name='Adorno')
+    collor1 = models.PositiveSmallIntegerField(choices=CORES, null=True, blank=True, verbose_name='Cor Brasão 1')
+    collor2 = models.PositiveSmallIntegerField(choices=CORES, null=True, blank=True, verbose_name='Cor Brasão 2')
+    collor3 = models.PositiveSmallIntegerField(choices=CORES, null=True, blank=True, verbose_name='Cor Brasão 3')
+
+    def __str__(self):
+        return self.teamdata.profile.user.username
+
+@receiver(post_save, sender=TeamData)
+def create_or_update_teamdata_teamcrest(sender, instance, created, **kwargs):
+    if created:
+        TeamCrest.objects.create(teamdata=instance)
+    instance.teamcrest.save()

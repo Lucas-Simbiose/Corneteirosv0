@@ -8,7 +8,7 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 
-from users.forms import SignUpForm, ProfileForm
+from users.forms import SignUpForm, ProfileForm, TeamDataForm, TeamCrestForm
 
 
 def signup(request):
@@ -39,3 +39,27 @@ def profile(request):
         form = ProfileForm(instance=request.user.profile)
 
     return render(request, 'perfil.html', {'form': form})
+
+@login_required(login_url='/users/login')
+def teamdata(request):
+    if request.method == "POST":
+        form = TeamDataForm(request.POST, instance=request.user.profile.teamdata)
+        if form.is_valid():
+            profile = form.save()
+            profile.save()
+    else:
+        form = TeamDataForm(instance=request.user.profile.teamdata)
+
+    return render(request, 'dados_time.html', {'form': form})
+
+@login_required(login_url='/users/login')
+def teamcrest(request):
+    if request.method == "POST":
+        form = TeamCrestForm(request.POST, instance=request.user.profile.teamdata.teamcrest)
+        if form.is_valid():
+            teamdata = form.save()
+            teamdata.save()
+    else:
+        form = TeamCrestForm(instance=request.user.profile.teamdata.teamcrest)
+
+    return render(request, 'escudo_time.html', {'form': form})

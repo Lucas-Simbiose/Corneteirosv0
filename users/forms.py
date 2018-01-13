@@ -2,7 +2,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Profile
+from .models import Profile, TeamData, TeamCrest
 
 
 class SignUpForm(UserCreationForm):
@@ -16,3 +16,13 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ('full_name', 'birth_date', 'cpf', 'gender', 'zip_code', 'street', 'number', 'complement', 'neighborhood', 'city', 'state')
+
+class TeamDataForm(forms.ModelForm):
+    class Meta:
+        model = TeamData
+        fields = ('team_name', 'real_team')
+
+class TeamCrestForm(forms.ModelForm):
+    class Meta:
+        model = TeamCrest
+        fields = ('crest_type', 'stamp', 'adornment', 'collor1', 'collor2', 'collor3')

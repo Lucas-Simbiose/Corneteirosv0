@@ -7,6 +7,8 @@ from . import views as core_views
 urlpatterns = [
     url(r'^signup/$', core_views.signup, name='signup'),
     path('perfil/', views.profile, name='perfil'),
+    path('dados_time/', views.teamdata, name='dados_time'),
+    path('escudo_time/', views.teamcrest, name='escudo_time'),
 ]
 
 # urlpatterns = [
