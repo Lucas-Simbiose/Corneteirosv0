@@ -6,7 +6,10 @@
         {{ form.as_p }}
         <button type="submit" class="save btn btn-default">Save</button>
     </form>
-    <form method="link" action="{% url 'escudo_time' %}">{% csrf_token %}
+    <form method="link" action="{% url 'camisa_time' %}">{% csrf_token %}
         <button type="submit" >Avançar</button>
+    </form>
+    <form method="link" action="{% url 'dados_time' %}">{% csrf_token %}
+        <button type="submit" >Voltar</button>
     </form>
 {% endblock %}

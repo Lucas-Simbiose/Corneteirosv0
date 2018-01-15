@@ -8,7 +8,7 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
 
-from users.forms import SignUpForm, ProfileForm, TeamDataForm, TeamCrestForm
+from users.forms import SignUpForm, ProfileForm, TeamDataForm, TeamCrestForm, TeamShirtForm
 
 
 def signup(request):
@@ -63,3 +63,15 @@ def teamcrest(request):
         form = TeamCrestForm(instance=request.user.profile.teamdata.teamcrest)
 
     return render(request, 'escudo_time.html', {'form': form})
+
+@login_required(login_url='/users/login')
+def teamshirt(request):
+    if request.method == "POST":
+        form = TeamShirtForm(request.POST, instance=request.user.profile.teamdata.teamshirt)
+        if form.is_valid():
+            teamdata = form.save()
+            teamdata.save()
+    else:
+        form = TeamShirtForm(instance=request.user.profile.teamdata.teamshirt)
+
+    return render(request, 'camisa_time.html', {'form': form})

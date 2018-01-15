@@ -92,3 +92,36 @@ def create_or_update_teamdata_teamcrest(sender, instance, created, **kwargs):
     if created:
         TeamCrest.objects.create(teamdata=instance)
     instance.teamcrest.save()
+
+class TeamShirt(models.Model):
+    A, B, C, D, E = 1, 2, 3, 4, 5
+    SHIRT_CHOICES = (
+        (A, 'A'),
+        (B, 'B'),
+        (C, 'C'),
+        (D, 'D'),
+        (E, 'E'),
+    )
+    Verde, Vermelho, Azul, Amarelo, Preto = 1, 2, 3, 4, 5
+    CORES = (
+        (Verde, 'Verde'),
+        (Vermelho, 'Vermelho'),
+        (Azul, 'Azul'),
+        (Amarelo, 'Amarelo'),
+        (Preto, 'Preto'),
+    )
+    teamdata = models.OneToOneField(TeamData, on_delete=models.CASCADE)
+    shirt_type = models.PositiveSmallIntegerField(choices=SHIRT_CHOICES, null=True, blank=True, verbose_name='Modelo da Camisa')
+    shirt_stamp = models.PositiveSmallIntegerField(choices=SHIRT_CHOICES, null=True, blank=True, verbose_name='Estampa da Camisa')
+    collor1 = models.PositiveSmallIntegerField(choices=CORES, null=True, blank=True, verbose_name='Cor Brasão 1')
+    collor2 = models.PositiveSmallIntegerField(choices=CORES, null=True, blank=True, verbose_name='Cor Brasão 2')
+    collor3 = models.PositiveSmallIntegerField(choices=CORES, null=True, blank=True, verbose_name='Cor Brasão 3')
+
+    def __str__(self):
+        return self.teamdata.profile.user.username
+
+@receiver(post_save, sender=TeamData)
+def create_or_update_teamdata_teamshirt(sender, instance, created, **kwargs):
+    if created:
+        TeamShirt.objects.create(teamdata=instance)
+    instance.teamshirt.save()
