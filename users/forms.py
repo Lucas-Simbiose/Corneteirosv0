@@ -6,7 +6,7 @@ from .models import Profile, TeamData, TeamCrest, TeamShirt
 
 
 class SignUpForm(UserCreationForm):
-    email = forms.EmailField(max_length=254, help_text='Required. Inform a valid email address.')
+    email = forms.EmailField(max_length=254, help_text='Obrigatório. Informe um email válido.')
 
     class Meta:
         model = User

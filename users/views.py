@@ -7,7 +7,7 @@ from django.views import generic
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
-
+from .models import Profile, TeamData, TeamCrest, TeamShirt
 from users.forms import SignUpForm, ProfileForm, TeamDataForm, TeamCrestForm, TeamShirtForm
 
 
@@ -16,14 +16,15 @@ def signup(request):
         form = SignUpForm(request.POST)
         if form.is_valid():
             user = form.save()
-            form.save()
-            user.refresh_from_db()
-            user.save()
+            profile = Profile.objects.create(user=user)
+            teamdata = TeamData.objects.create(profile=profile)
+            TeamCrest.objects.create(teamdata=teamdata)
+            TeamShirt.objects.create(teamdata=teamdata)
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
             login(request, user)
-            return redirect('home')
+            return redirect('dados_time')
     else:
         form = SignUpForm()
     return render(request, 'signup.html', {'form': form})
@@ -33,8 +34,7 @@ def profile(request):
     if request.method == "POST":
         form = ProfileForm(request.POST, instance=request.user.profile)
         if form.is_valid():
-            user = form.save()
-            user.save()
+            form.save()
     else:
         form = ProfileForm(instance=request.user.profile)
 
@@ -45,8 +45,7 @@ def teamdata(request):
     if request.method == "POST":
         form = TeamDataForm(request.POST, instance=request.user.profile.teamdata)
         if form.is_valid():
-            profile = form.save()
-            profile.save()
+            form.save()
     else:
         form = TeamDataForm(instance=request.user.profile.teamdata)
 
@@ -57,8 +56,7 @@ def teamcrest(request):
     if request.method == "POST":
         form = TeamCrestForm(request.POST, instance=request.user.profile.teamdata.teamcrest)
         if form.is_valid():
-            teamdata = form.save()
-            teamdata.save()
+            form.save()
     else:
         form = TeamCrestForm(instance=request.user.profile.teamdata.teamcrest)
 
@@ -69,8 +67,7 @@ def teamshirt(request):
     if request.method == "POST":
         form = TeamShirtForm(request.POST, instance=request.user.profile.teamdata.teamshirt)
         if form.is_valid():
-            teamdata = form.save()
-            teamdata.save()
+            form.save()
     else:
         form = TeamShirtForm(instance=request.user.profile.teamdata.teamshirt)
 

@@ -33,11 +33,15 @@ class Profile(models.Model):
     def __str__(self):
         return self.user.username
 
-@receiver(post_save, sender=User)
-def create_or_update_user_profile(sender, instance, created, **kwargs):
-    if created:
-        Profile.objects.create(user=instance)
-    instance.profile.save()
+    class Meta:
+        verbose_name = 'Profile'
+        verbose_name_plural = 'Profiles'
+
+# @receiver(post_save, sender=User)
+# def create_or_update_user_profile(sender, instance, created, **kwargs):
+#     if created:
+#         Profile.objects.create(user=instance)
+#     instance.profile.save()
 
 class TeamData(models.Model):
     Corinthians, Vasco, Atletico_pr, Atletico_mg, Palmeiras = 1, 2, 3, 4, 5
@@ -55,11 +59,14 @@ class TeamData(models.Model):
     def __str__(self):
         return self.profile.user.username
 
-@receiver(post_save, sender=Profile)
-def create_or_update_profile_teamdata(sender, instance, created, **kwargs):
-    if created:
-        TeamData.objects.create(profile=instance)
-    instance.teamdata.save()
+    class Meta:
+        verbose_name = 'Team Data'
+
+# @receiver(post_save, sender=Profile)
+# def create_or_update_profile_teamdata(sender, instance, created, **kwargs):
+#     if created:
+#         TeamData.objects.create(teamdata=instance)
+#     instance.teamdata.save()
 
 class TeamCrest(models.Model):
     Grande, Pequeno, Medio = 1, 2, 3
@@ -87,11 +94,14 @@ class TeamCrest(models.Model):
     def __str__(self):
         return self.teamdata.profile.user.username
 
-@receiver(post_save, sender=TeamData)
-def create_or_update_teamdata_teamcrest(sender, instance, created, **kwargs):
-    if created:
-        TeamCrest.objects.create(teamdata=instance)
-    instance.teamcrest.save()
+    class Meta:
+        verbose_name = 'Team Crest'
+
+# @receiver(post_save, sender=TeamData)
+# def create_or_update_teamdata_teamcrest(sender, instance, created, **kwargs):
+#     if created:
+#         TeamCrest.objects.create(teamcrest=instance)
+#     instance.teamcrest.save()
 
 class TeamShirt(models.Model):
     A, B, C, D, E = 1, 2, 3, 4, 5
@@ -120,8 +130,11 @@ class TeamShirt(models.Model):
     def __str__(self):
         return self.teamdata.profile.user.username
 
-@receiver(post_save, sender=TeamData)
-def create_or_update_teamdata_teamshirt(sender, instance, created, **kwargs):
-    if created:
-        TeamShirt.objects.create(teamdata=instance)
-    instance.teamshirt.save()
+    class Meta:
+        verbose_name = 'Team Shirt'
+
+# @receiver(post_save, sender=TeamData)
+# def create_or_update_teamdata_teamshirt(sender, instance, created, **kwargs):
+#     if created:
+#         TeamShirt.objects.create(teamshirt=instance)
+#     instance.teamshirt.save()
