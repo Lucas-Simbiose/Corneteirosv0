@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>Escolha seus torneios</h2>
+    <form method="POST" class="post-form">{% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="save btn btn-default" action="{% url 'home' %}">Save</button>
+    </form>
+{#    <form method="link" action="{% url 'camisa_time' %}">{% csrf_token %}#}
+{#        <button type="submit" >Avançar</button>#}
+{#    </form>#}
+    <form method="link" action="{% url 'home' %}">{% csrf_token %}
+        <button type="submit" >Voltar</button>
+    </form>
+{% endblock %}

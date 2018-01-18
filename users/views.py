@@ -7,8 +7,8 @@ from django.views import generic
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
-from .models import Profile, TeamData, TeamCrest, TeamShirt
-from users.forms import SignUpForm, ProfileForm, TeamDataForm, TeamCrestForm, TeamShirtForm
+from .models import Profile, TeamData, TeamCrest, TeamShirt, UserTournament
+from users.forms import SignUpForm, ProfileForm, TeamDataForm, TeamCrestForm, TeamShirtForm, UserTournamentForm
 
 
 def signup(request):
@@ -20,6 +20,7 @@ def signup(request):
             teamdata = TeamData.objects.create(profile=profile)
             TeamCrest.objects.create(teamdata=teamdata)
             TeamShirt.objects.create(teamdata=teamdata)
+            # UserTournament.objects.create(teamdata=teamdata)
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
@@ -72,3 +73,16 @@ def teamshirt(request):
         form = TeamShirtForm(instance=request.user.profile.teamdata.teamshirt)
 
     return render(request, 'camisa_time.html', {'form': form})
+
+@login_required(login_url='/users/login')
+def usertournament(request):
+    if request.method == "POST":
+        form = UserTournamentForm(request.POST, instance=request.user.profile.teamdata)
+        if form.is_valid():
+            user = form.save()
+            user.realtournament = form.cleaned_data.get('realtournament')
+            UserTournament.objects.create(teamdata=request.user.profile.teamdata, realtournament=user.realtournament)
+    else:
+        form = UserTournamentForm()
+
+    return render(request, 'torneios_usuario.html', {'form': form})

@@ -138,3 +138,25 @@ class TeamShirt(models.Model):
 #     if created:
 #         TeamShirt.objects.create(teamshirt=instance)
 #     instance.teamshirt.save()
+
+
+class RealTournament(models.Model):
+    tournament = models.CharField(max_length=45)
+
+    def __str__(self):
+        return self.tournament
+
+    class Meta:
+        verbose_name = 'Tournament'
+        verbose_name_plural = 'Tournaments'
+
+class UserTournament(models.Model):
+    teamdata = models.ForeignKey(TeamData, on_delete=models.CASCADE)
+    realtournament = models.ForeignKey(RealTournament, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.teamdata.profile.user.username + " - " + str(self.realtournament)
+
+    class Meta:
+        verbose_name = 'Torneio do Usuário'
+        verbose_name_plural = 'Torneios do Usuário'

@@ -10,6 +10,7 @@ urlpatterns = [
     path('dados_time/', views.teamdata, name='dados_time'),
     path('escudo_time/', views.teamcrest, name='escudo_time'),
     path('camisa_time/', views.teamshirt, name='camisa_time'),
+    path('torneios_usuario/', views.usertournament, name='torneios_usuario'),
 ]
 
 # urlpatterns = [
