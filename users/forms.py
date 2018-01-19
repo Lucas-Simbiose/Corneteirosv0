@@ -2,7 +2,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Profile, TeamData, TeamCrest, TeamShirt, UserTournament
+from .models import Profile, TeamData, TeamCrest, TeamShirt, UserTournament, Hint
 
 
 class SignUpForm(UserCreationForm):
@@ -36,3 +36,8 @@ class UserTournamentForm(forms.ModelForm):
     class Meta:
         model = UserTournament
         fields = ('realtournament',)
+
+class BolaoForm(forms.ModelForm):
+    class Meta:
+        model = Hint
+        fields = ('match', 'hint_home_team', 'hint_away_team',)

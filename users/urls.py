@@ -11,6 +11,7 @@ urlpatterns = [
     path('escudo_time/', views.teamcrest, name='escudo_time'),
     path('camisa_time/', views.teamshirt, name='camisa_time'),
     path('torneios_usuario/', views.usertournament, name='torneios_usuario'),
+    path('bolao/', views.bolao, name='bolao'),
 ]
 
 # urlpatterns = [

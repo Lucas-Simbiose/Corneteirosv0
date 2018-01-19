@@ -7,8 +7,9 @@ from django.views import generic
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
-from .models import Profile, TeamData, TeamCrest, TeamShirt, UserTournament
-from users.forms import SignUpForm, ProfileForm, TeamDataForm, TeamCrestForm, TeamShirtForm, UserTournamentForm
+from .models import Profile, TeamData, TeamCrest, TeamShirt, UserTournament, Hint
+from users.forms import SignUpForm, ProfileForm, TeamDataForm, TeamCrestForm, TeamShirtForm, UserTournamentForm, \
+    BolaoForm
 
 
 def signup(request):
@@ -86,3 +87,18 @@ def usertournament(request):
         form = UserTournamentForm()
 
     return render(request, 'torneios_usuario.html', {'form': form})
+
+@login_required(login_url='/users/login')
+def bolao(request):
+    if request.method == "POST":
+        form = BolaoForm(request.POST, instance=request.user.profile.teamdata)
+        if form.is_valid():
+            user = form.save()
+            user.realtournament = UserTournament.objects.get(teamdata=request.user.profile.teamdata)
+            user.match = form.cleaned_data.get('match')
+            user.usertournament = UserTournament.objects.get(realtournament=request.user.profile.teamdata)
+            Hint.objects.create(realtournament=user.realtournament, match=user.match, usertournament=user.usertournament)
+    else:
+        form = BolaoForm()
+
+    return render(request, 'bolao.html', {'form': form})

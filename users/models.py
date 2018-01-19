@@ -44,13 +44,14 @@ class Profile(models.Model):
 #     instance.profile.save()
 
 class TeamData(models.Model):
-    Corinthians, Vasco, Atletico_pr, Atletico_mg, Palmeiras = 1, 2, 3, 4, 5
+    Corinthians, Vasco, Atletico_pr, Atletico_mg, Palmeiras, Botafogo = 1, 2, 3, 4, 5, 6
     TEAM_CHOICES = (
         (Corinthians, 'Corinthians'),
         (Vasco, 'Vasco'),
         (Atletico_pr, 'Atletico_pr'),
         (Atletico_mg, 'Atletico_mg'),
         (Palmeiras, 'Palmeiras'),
+        (Botafogo, 'Botafogo'),
     )
     profile = models.OneToOneField(Profile, on_delete=models.CASCADE)
     team_name = models.CharField(max_length=100, null=True, blank=True, verbose_name='Nome do Time')
@@ -160,3 +161,73 @@ class UserTournament(models.Model):
     class Meta:
         verbose_name = 'Torneio do Usuário'
         verbose_name_plural = 'Torneios do Usuário'
+
+class SoccerTeam(models.Model):
+    name = models.CharField(max_length=45)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Time de Futebol'
+        verbose_name_plural = 'Times de Futebol'
+
+class TeamTournament(models.Model):
+    soccerteam = models.ForeignKey(SoccerTeam, on_delete=models.CASCADE)
+    realtournament = models.ForeignKey(RealTournament, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.realtournament.tournament + " - " + self.soccerteam.name
+
+    class Meta:
+        verbose_name = 'Torneio do Time'
+        verbose_name_plural = 'Torneios dos Times'
+
+class Round(models.Model):
+    realtournament = models.ForeignKey(RealTournament, on_delete=models.CASCADE)
+    round_number = models.PositiveIntegerField()
+
+    def __str__(self):
+        return "Rodada número " + str(self.round_number)
+
+    class Meta:
+        verbose_name = 'Rodada'
+        verbose_name_plural = 'Rodadas'
+
+class Match(models.Model):
+    soccerteam_home = models.ForeignKey(SoccerTeam, related_name='soccerteam_home', on_delete=models.CASCADE)
+    soccerteam_away = models.ForeignKey(SoccerTeam, related_name='soccerteam_away', on_delete=models.CASCADE)
+    round = models.ForeignKey(Round, on_delete=models.CASCADE)
+    match_number = models.PositiveIntegerField(null=True, blank=True)
+    result_home_team = models.PositiveIntegerField(default=0)
+    result_away_team = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return "Rodada " + str(self.round.round_number) + " - " + self.soccerteam_home.name + " vs " + self.soccerteam_away.name
+
+    class Meta:
+        verbose_name = 'Partida'
+        verbose_name_plural = 'Partidas'
+
+class Hint(models.Model):
+    realtournament = models.ForeignKey(RealTournament, on_delete=models.CASCADE)
+    match = models.ForeignKey(Match, on_delete=models.CASCADE)
+    usertournament = models.ForeignKey(UserTournament, on_delete=models.CASCADE)
+    hint_home_team = models.PositiveIntegerField(null=True, blank=True)
+    hint_away_team = models.PositiveIntegerField(null=True, blank=True)
+
+    def __str__(self):
+        return self.match.soccerteam_home.name + " " + str(self.hint_home_team) + " - " + str(self.hint_away_team) + " " + self.match.soccerteam_away.name
+
+    class Meta:
+        verbose_name = 'Palpite'
+        verbose_name_plural = 'Palpites'
+
+# class UserMatchHint(models.Model):
+#     hint = models.ForeignKey(Hint, on_delete=models.CASCADE)
+#     match = models.ForeignKey(Match, on_delete=models.CASCADE)
+#     usertournament = models.ForeignKey(UserTournament, on_delete=models.CASCADE)
+#
+#     class Meta:
+#         verbose_name = 'Palpite do Usuário'
+#         verbose_name_plural = 'Palpites do Usuário'
