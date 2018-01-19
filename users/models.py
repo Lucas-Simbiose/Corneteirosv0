@@ -43,19 +43,29 @@ class Profile(models.Model):
 #         Profile.objects.create(user=instance)
 #     instance.profile.save()
 
+class SoccerTeam(models.Model):
+    name = models.CharField(max_length=45)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Time de Futebol'
+        verbose_name_plural = 'Times de Futebol'
+
 class TeamData(models.Model):
-    Corinthians, Vasco, Atletico_pr, Atletico_mg, Palmeiras, Botafogo = 1, 2, 3, 4, 5, 6
-    TEAM_CHOICES = (
-        (Corinthians, 'Corinthians'),
-        (Vasco, 'Vasco'),
-        (Atletico_pr, 'Atletico_pr'),
-        (Atletico_mg, 'Atletico_mg'),
-        (Palmeiras, 'Palmeiras'),
-        (Botafogo, 'Botafogo'),
-    )
+    # Corinthians, Vasco, Atletico_pr, Atletico_mg, Palmeiras, Botafogo = 1, 2, 3, 4, 5, 6
+    # TEAM_CHOICES = (
+    #     (Corinthians, 'Corinthians'),
+    #     (Vasco, 'Vasco'),
+    #     (Atletico_pr, 'Atletico_pr'),
+    #     (Atletico_mg, 'Atletico_mg'),
+    #     (Palmeiras, 'Palmeiras'),
+    #     (Botafogo, 'Botafogo'),
+    # )
     profile = models.OneToOneField(Profile, on_delete=models.CASCADE)
     team_name = models.CharField(max_length=100, null=True, blank=True, verbose_name='Nome do Time')
-    real_team = models.PositiveIntegerField(choices=TEAM_CHOICES, null=True, blank=True, verbose_name='Time do Coração')
+    soccerteam = models.ForeignKey(SoccerTeam, null=True, blank=True, verbose_name='Time do Coração', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.profile.user.username
@@ -161,16 +171,6 @@ class UserTournament(models.Model):
     class Meta:
         verbose_name = 'Torneio do Usuário'
         verbose_name_plural = 'Torneios do Usuário'
-
-class SoccerTeam(models.Model):
-    name = models.CharField(max_length=45)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = 'Time de Futebol'
-        verbose_name_plural = 'Times de Futebol'
 
 class TeamTournament(models.Model):
     soccerteam = models.ForeignKey(SoccerTeam, on_delete=models.CASCADE)

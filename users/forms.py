@@ -20,7 +20,7 @@ class ProfileForm(forms.ModelForm):
 class TeamDataForm(forms.ModelForm):
     class Meta:
         model = TeamData
-        fields = ('team_name', 'real_team')
+        fields = ('team_name', 'soccerteam')
 
 class TeamCrestForm(forms.ModelForm):
     class Meta:

@@ -94,10 +94,12 @@ def bolao(request):
         form = BolaoForm(request.POST, instance=request.user.profile.teamdata)
         if form.is_valid():
             user = form.save()
-            user.realtournament = UserTournament.objects.get(teamdata=request.user.profile.teamdata)
             user.match = form.cleaned_data.get('match')
-            user.usertournament = UserTournament.objects.get(realtournament=request.user.profile.teamdata)
-            Hint.objects.create(realtournament=user.realtournament, match=user.match, usertournament=user.usertournament)
+            user.realtournament = UserTournament.objects.get(realtournament=user.match.round.realtournament)
+            user.usertournament = UserTournament.objects.get(teamdata=request.user.profile.teamdata)
+            user.hint_home_team = form.cleaned_data.get('hint_home_team')
+            user.hint_away_team = form.cleaned_data.get('hint_away_team')
+            Hint.objects.create(realtournament=user.realtournament.realtournament, match=user.match, usertournament=user.usertournament, hint_home_team=user.hint_home_team, hint_away_team=user.hint_away_team)
     else:
         form = BolaoForm()
 
